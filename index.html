@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>c0c0nut OS</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="main.css" />
+	</head>
+	<body>
+		<div class="boot-screen active" id="bootScreen">
+			<div class="boot-overlay">
+				<img
+					src="resources/coconut.png"
+					alt="Logo Coconut OS"
+					class="boot-logo"
+					draggable="false"
+				/>
+				<span>c0c0nut OS :)</span>
+				<div class="boot-bar">
+					<div class="boot-progress" id="bootProgress"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="system" id="systemInterface">
+			<div class="desktop" id="desktop">
+				<button class="desktop-icon" data-app="notes">
+					<img src="https://img.icons8.com/fluency/96/notepad.png" alt="Ghi chú" />
+					<span class="label">Sổ tay</span>
+				</button>
+				<button class="desktop-icon" data-app="gallery">
+					<img src="https://img.icons8.com/fluency/96/picture.png" alt="Thư viện" />
+					<span class="label">Thư viện</span>
+				</button>
+				<button class="desktop-icon" data-app="terminal">
+					<img src="https://img.icons8.com/fluency/96/console.png" alt="Terminal" />
+					<span class="label">Terminal</span>
+				</button>
+				<button class="desktop-icon" data-app="weather">
+					<img src="https://img.icons8.com/fluency/96/sun.png" alt="Thời tiết" />
+					<span class="label">Thời tiết</span>
+				</button>
+			</div>
+
+			<div class="window window-notes" id="window-notes" data-app="notes">
+				<div class="title-bar">
+					<span class="title">Sổ tay</span>
+					<div class="window-actions">
+						<button data-action="minimize" title="Thu nhỏ">_</button>
+						<button data-action="close" title="Đóng">×</button>
+					</div>
+				</div>
+				<div class="window-content">
+					<h3>Ghi chú nhanh</h3>
+					<textarea class="notes-editor" placeholder="Ghi lại ý tưởng của bạn tại đây..."></textarea>
+					<p class="note-tip">
+						Tip: Nội dung sẽ được lưu tạm trong trình duyệt của bạn.
+					</p>
+				</div>
+			</div>
+
+			<div class="window window-gallery" id="window-gallery" data-app="gallery">
+				<div class="title-bar">
+					<span class="title">Thư viện ảnh</span>
+					<div class="window-actions">
+						<button data-action="minimize" title="Thu nhỏ">_</button>
+						<button data-action="close" title="Đóng">×</button>
+					</div>
+				</div>
+				<div class="window-content">
+					<h3>Khoảnh khắc yêu thích</h3>
+					<div class="gallery">
+						<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=60" alt="Code" />
+						<img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=600&q=60" alt="Phong cảnh" />
+						<img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=600&q=60" alt="Xanh" />
+						<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=60" alt="Thành phố" />
+					</div>
+				</div>
+			</div>
+
+			<div class="window window-terminal" id="window-terminal" data-app="terminal">
+				<div class="title-bar">
+					<span class="title">Terminal</span>
+					<div class="window-actions">
+						<button data-action="minimize" title="Thu nhỏ">_</button>
+						<button data-action="close" title="Đóng">×</button>
+					</div>
+				</div>
+				<div class="window-content">
+					<div class="terminal" id="terminal">
+						<div class="terminal-output" id="terminalOutput" aria-live="polite"></div>
+						<form class="terminal-input-row" id="terminalForm">
+							<span class="terminal-prompt" aria-hidden="true">visitor@c0c0nut-os:~$</span>
+							<input
+								type="text"
+								class="terminal-input"
+								id="terminalInput"
+								name="terminal-input"
+								autocomplete="off"
+								spellcheck="false"
+								aria-label="Terminal input"
+								placeholder="Type a command..."
+							/>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="window window-weather" id="window-weather" data-app="weather">
+				<div class="title-bar">
+					<span class="title">Thời tiết hôm nay</span>
+					<div class="window-actions">
+						<button data-action="minimize" title="Thu nhỏ">_</button>
+						<button data-action="close" title="Đóng">×</button>
+					</div>
+				</div>
+				<div class="window-content">
+					<h3 id="weather-city">Đang tải...</h3>
+					<div class="weather-hero">
+						<div class="weather-icon">☀️</div>
+						<div class="weather-stats">
+							<p class="weather-temp" id="weather-temp">27°C</p>
+							<p class="weather-status" id="weather-status">Nhiều nắng</p>
+						</div>
+					</div>
+					<ul class="weather-list">
+						<li>Độ ẩm: <span id="weather-humidity">58%</span></li>
+						<li>Gió: <span id="weather-wind">12 km/h</span></li>
+						<li>Cảm giác như: <span id="weather-feels">29°C</span></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="start-menu" id="startMenu">
+				<h2>Ứng dụng</h2>
+				<div class="start-list">
+					<button class="start-item" data-app="notes">Sổ tay</button>
+					<button class="start-item" data-app="gallery">Thư viện ảnh</button>
+					<button class="start-item" data-app="terminal">Terminal ảo</button>
+					<button class="start-item" data-app="weather">Thời tiết</button>
+				</div>
+			</div>
+
+			<div class="taskbar">
+				<button class="start-button" id="startButton">
+					<img
+						src="resources/coconut.png"
+						alt="Coconut"
+						width="24"
+						height="24"
+					/>
+				</button>
+				<div class="taskbar-apps" id="taskbarApps"></div>
+				<div class="taskbar-clock" id="taskbarClock">00:00</div>
+			</div>
+		</div>
+
+		<script src="scripts.js" defer></script>
+		</body>
+	</html>

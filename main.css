@@ -1,0 +1,549 @@
+:root {
+	color-scheme: light dark;
+	--bg-gradient: linear-gradient(135deg, #3358ff, #8b5dff);
+	--taskbar-height: 56px;
+	--window-radius: 14px;
+	--shadow: 0 18px 45px rgba(10, 14, 60, 0.28);
+	--glass: rgba(255, 255, 255, 0.07);
+	--glass-border: rgba(255, 255, 255, 0.24);
+	--text-glow: rgba(255, 255, 255, 0.7);
+}
+
+* {
+	box-sizing: border-box;
+	user-select: none;
+}
+
+body {
+	margin: 0;
+	font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+	min-height: 100vh;
+	background: #000;
+	overflow: hidden;
+	color: #fff;
+}
+
+.system {
+	position: relative;
+	flex: 1;
+	min-height: 100vh;
+	width: 100%;
+	display: flex;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.6s ease;
+}
+
+.system.system-ready {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.boot-screen {
+	position: fixed;
+	inset: 0;
+	background: #000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+	transition: opacity 0.6s ease;
+}
+
+.boot-screen.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.boot-overlay {
+	width: min(420px, 70vw);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 28px;
+}
+
+.boot-bar {
+	position: relative;
+	width: 100%;
+	height: 24px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	background: rgba(255, 255, 255, 0.12);
+	overflow: hidden;
+	box-shadow: 0 18px 40px rgba(255, 255, 255, 0.15);
+}
+
+.boot-progress {
+	position: absolute;
+	inset: 0;
+	width: 0;
+	background: #fff;
+	transform-origin: left center;
+	transition: width 0.4s ease;
+}
+
+.boot-logo {
+	width: clamp(110px, 18vw, 160px);
+	height: auto;
+	object-fit: contain;
+	filter: drop-shadow(0 12px 28px rgba(255, 255, 255, 0.32));
+}
+
+.desktop {
+	position: relative;
+	flex: 1;
+	background-image: var(--bg-gradient);
+	background-attachment: fixed;
+	background-size: cover;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+	align-content: start;
+	padding: 32px;
+	gap: 24px;
+}
+
+.desktop::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.35), transparent 45%),
+		radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.35), transparent 50%);
+	pointer-events: none;
+}
+
+.desktop-icon {
+	position: relative;
+	width: 110px;
+	height: 110px;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	backdrop-filter: blur(12px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease;
+	box-shadow: 0 12px 25px rgba(0, 0, 0, 0.16);
+	cursor: pointer;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+	transform: translateY(-6px) scale(1.02);
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.28);
+}
+
+.desktop-icon img,
+.desktop-icon span {
+	pointer-events: none;
+}
+
+.desktop-icon img {
+	width: 48px;
+	height: 48px;
+}
+
+.desktop-icon .label {
+	font-size: 0.9rem;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.85);
+	text-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+}
+
+.window {
+	position: absolute;
+	width: clamp(320px, 45vw, 620px);
+	min-height: 320px;
+	background: rgba(12, 16, 36, 0.6);
+	border-radius: var(--window-radius);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	backdrop-filter: blur(18px) saturate(130%);
+	box-shadow: var(--shadow);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	opacity: 0;
+	transform: scale(0.96) translateY(10px);
+	pointer-events: none;
+	transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.window.visible {
+	opacity: 1;
+	transform: scale(1) translateY(0);
+	pointer-events: auto;
+}
+
+.window.active {
+	border-color: rgba(255, 255, 255, 0.35);
+	box-shadow: 0 26px 55px rgba(10, 14, 60, 0.45);
+}
+
+.window-notes {
+	top: 80px;
+	left: 120px;
+}
+
+.window-gallery {
+	top: 120px;
+	left: 360px;
+}
+
+.window-terminal {
+	top: 170px;
+	left: 200px;
+	width: 540px;
+	max-width: 540px;
+	min-width: 540px;
+	height: 420px;
+	min-height: 420px;
+	max-height: 420px;
+}
+
+.window-terminal .window-content {
+	overflow: hidden;
+}
+
+.window-weather {
+	top: 140px;
+	left: 540px;
+}
+
+.title-bar {
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 18px;
+	background: rgba(255, 255, 255, 0.05);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	cursor: grab;
+}
+
+.title-bar:active {
+	cursor: grabbing;
+}
+
+.title-bar .title {
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+.window-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.window-actions button {
+	width: 34px;
+	height: 34px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	background: rgba(255, 255, 255, 0.06);
+	color: #fff;
+	font-size: 18px;
+	line-height: 0;
+	cursor: pointer;
+	transition: background 0.18s ease;
+}
+
+.window-actions button:hover {
+	background: rgba(255, 255, 255, 0.18);
+}
+
+.window-content {
+	flex: 1;
+	padding: 20px 24px 24px;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.notes-editor {
+	flex: 1;
+	resize: none;
+	min-height: 200px;
+	padding: 16px;
+	font-size: 1rem;
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	color: #f8f9ff;
+	line-height: 1.5;
+}
+
+.note-tip {
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 0.85rem;
+}
+
+.terminal {
+	background: rgba(0, 0, 0, 0.55);
+	border-radius: 12px;
+	padding: 18px;
+	font-family: "Fira Code", "Courier New", monospace;
+	color: #7eff95;
+	font-size: 0.95rem;
+	flex: 1;
+	min-height: 0;
+	box-shadow: inset 0 0 0 1px rgba(126, 255, 149, 0.12);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.terminal,
+.terminal * {
+	user-select: text;
+}
+
+.terminal-output {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.terminal-output::-webkit-scrollbar {
+	display: none;
+}
+
+.terminal-output {
+	scrollbar-width: none;
+}
+
+.terminal-line {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.terminal-line.command {
+	color: #b1ffd0;
+	font-weight: 600;
+}
+
+.terminal-input-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	border-top: 1px solid rgba(126, 255, 149, 0.18);
+	padding-top: 12px;
+}
+
+.terminal-prompt {
+	color: #8dffb6;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.terminal-input {
+	flex: 1;
+	background: transparent;
+	border: none;
+	color: #ffffff;
+	font: inherit;
+	padding: 0;
+	caret-color: #7eff95;
+}
+
+.terminal-input:focus {
+	outline: none;
+}
+
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: 16px;
+}
+
+.gallery img {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+.weather-hero {
+	display: flex;
+	gap: 24px;
+	align-items: center;
+}
+
+.weather-icon {
+	font-size: 3rem;
+}
+
+.weather-stats {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.weather-temp {
+	font-size: 2.6rem;
+	margin: 0;
+	font-weight: 600;
+}
+
+.weather-status {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.weather-list {
+	list-style: none;
+	padding: 0;
+	margin: 18px 0 0;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.taskbar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: var(--taskbar-height);
+	backdrop-filter: blur(20px) saturate(180%);
+	background: rgba(8, 12, 30, 0.65);
+	border-top: 1px solid rgba(255, 255, 255, 0.12);
+	padding: 0 16px;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.start-button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 18px;
+  padding-bottom: 18px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	color: #fff;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	cursor: pointer;
+	transition: background 0.18s ease;
+}
+
+.start-button:hover {
+	background: rgba(255, 255, 255, 0.16);
+}
+
+.taskbar-apps {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex: 1;
+}
+
+.taskbar-app {
+	padding: 10px 18px;
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid transparent;
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 0.95rem;
+	cursor: pointer;
+	transition: background 0.18s ease, border 0.18s ease;
+}
+
+.taskbar-app.active {
+	background: rgba(255, 255, 255, 0.18);
+	border-color: rgba(255, 255, 255, 0.25);
+}
+
+.taskbar-clock {
+	min-width: 90px;
+	text-align: right;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.start-menu {
+	position: fixed;
+	bottom: var(--taskbar-height);
+	left: 18px;
+	width: 320px;
+	background: rgba(12, 16, 36, 0.78);
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	backdrop-filter: blur(20px);
+	box-shadow: 0 28px 55px rgba(10, 14, 60, 0.44);
+	padding: 22px 20px 16px;
+	display: none;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.start-menu.visible {
+	display: flex;
+}
+
+.start-menu h2 {
+	margin: 0;
+	font-size: 1.1rem;
+	letter-spacing: 0.02em;
+}
+
+.start-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.start-item {
+	padding: 12px 14px;
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	font-size: 0.95rem;
+	color: rgba(255, 255, 255, 0.85);
+	cursor: pointer;
+	transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.start-item:hover {
+	background: rgba(255, 255, 255, 0.16);
+	transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+	.desktop {
+		padding-bottom: 120px;
+		grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+	}
+
+	.taskbar {
+		gap: 12px;
+	}
+
+	.taskbar-app {
+		padding: 8px 14px;
+		font-size: 0.85rem;
+	}
+
+	.window {
+		width: clamp(280px, 90vw, 560px);
+		min-height: 280px;
+	}
+
+	.boot-logo {
+		width: 64px;
+		height: 64px;
+	}
+}
