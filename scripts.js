@@ -178,6 +178,7 @@ const appNames = {
 	gallery: "Thư viện",
 	terminal: "Terminal",
 	weather: "Thời tiết",
+	spotify: "Spotify",
 };
 
 function updateClock() {
@@ -437,8 +438,7 @@ function finalizeBoot() {
 		bootScreen.remove();
 	}, 900);
 	playStartupSound();
-	showWindow("notes");
-	showWindow("weather");
+	showWindow("spotify");
 }
 
 function runBootSequence() {
